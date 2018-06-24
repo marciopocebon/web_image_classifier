@@ -20,8 +20,11 @@ from __future__ import division, print_function, absolute_import
 import argparse
 import sys
 import logging
-
-from web_image_classifier import __version__
+import sys
+import time
+import os
+import urlparse
+from generate_screenshot import Screenshot
 
 __author__ = "uppusaikiran"
 __copyright__ = "uppusaikiran"
@@ -29,19 +32,19 @@ __license__ = "none"
 
 _logger = logging.getLogger(__name__)
 
+class GenerateImages(object):
+    def __init__(self):
+        pass
 
-def fib(n):
-    """
-    Fibonacci example function
-
-    :param n: integer
-    :return: n-th Fibonacci number
-    """
-    assert n > 0
-    a, b = 1, 1
-    for i in range(n-1):
-        a, b = b, a+b
-    return a
+    def generate_images(self,folderpath):
+	self.folderpath = folderpath
+	import os
+	
+	with open(self.folderpath , 'r') as f:
+	    for x in f:
+		url = x.rstrip()
+		s = Screenshot()
+    		s.generate_screenshot_headless(str(url),'{}.png'.format(str(url)))
 
 
 def parse_args(args):
@@ -52,29 +55,27 @@ def parse_args(args):
     :return: command line parameters as :obj:`airgparse.Namespace`
     """
     parser = argparse.ArgumentParser(
-        description="Just a Fibonnaci demonstration")
+        description="Generate Screenshots for entire Folder")
     parser.add_argument(
-        '-v',
-        '--version',
-        action='version',
-        version='web_image_classifier {ver}'.format(ver=__version__))
-    parser.add_argument(
-        dest="n",
-        help="n-th Fibonacci number",
-        metavar="INT")
+    '-w',
+    '--folderpath',
+        help="Enter Folder path.",
+        )
     return parser.parse_args(args)
 
 
 def main(args):
     args = parse_args(args)
-    print("The {}-th Fibonacci number is {}".format(args.n, fib(args.n)))
-    _logger.info("Script ends here")
-
+    s = GenerateImages()
+    s.generate_images(str(args.folderpath))
 
 def run():
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    #logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    logging.basicConfig(level=logging.INFO,filename='web-image.log',
+            format='%(asctime)s %(message)s')
     main(sys.argv[1:])
 
 
 if __name__ == "__main__":
     run()
+
