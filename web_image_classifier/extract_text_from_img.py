@@ -39,7 +39,12 @@ class ImageToText(object):
 
     def extract_text(self,imagepath):
         self.imagepath = imagepath
-        print(image_to_string(Image.open(self.imagepath), lang='eng'))
+        raw_text = image_to_string(Image.open(self.imagepath), lang='eng')
+	#raw_text = ",".join(raw_text.split("\n"))
+	raw_text = [x for x in raw_text.split("\n") if x]
+	_logger.info('Text extracted from Image {} - {}'.format(imagepath,raw_text))
+	print(raw_text)
+	return raw_text
 
 
 
